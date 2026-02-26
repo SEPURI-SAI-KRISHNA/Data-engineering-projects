@@ -1,0 +1,9 @@
+# IntelliJ IDEA
+.idea/
+__pycache__/
+*.pyc
+.env
+venv/
+.data/
+logs/
+.vscode/
