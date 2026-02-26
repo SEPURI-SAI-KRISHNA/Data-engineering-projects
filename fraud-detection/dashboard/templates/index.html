@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraud Investigation Unit</title>
+
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* 1. Reset & Base */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent global scrollbars */
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* 2. Layout Grid (Header + Main Body) */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            height: 60px;
+            background-color: #1f2833;
+            border-bottom: 2px solid #66fcf1;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1; /* Take remaining height */
+            height: calc(100vh - 60px); /* Explicit height calculation */
+            overflow: hidden;
+        }
+
+        /* 3. Sidebar (Logs) */
+        .sidebar {
+            width: 350px;
+            background-color: #151b24;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Don't let sidebar expand parent */
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+        }
+
+        #log-container {
+            flex: 1;
+            overflow-y: auto; /* Scroll ONLY the logs */
+            padding: 10px;
+        }
+
+        /* 4. Graph Area (The Fix) */
+        #network-wrapper {
+            flex: 1;
+            position: relative; /* Anchor for absolute child */
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0b0c10 100%);
+        }
+
+        #network {
+            position: absolute; /* Pin to corners */
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Styling details */
+        h1 { font-size: 20px; margin: 0; color: #66fcf1; text-transform: uppercase; }
+        .log-entry { background: #222; border-left: 3px solid #ff0033; padding: 10px; margin-bottom: 10px; font-size: 13px; }
+        .log-time { color: #888; font-size: 10px; display: block; margin-bottom: 4px; }
+        .status-badge { background: #004d40; color: #66fcf1; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1><i class="fas fa-project-diagram"></i> Flink Investigation Unit</h1>
+        <div id="connection-status" class="status-badge">Waiting...</div>
+    </header>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="sidebar-header"><i class="fas fa-bell"></i> Live Detection Feed</div>
+            <div id="log-container">
+                </div>
+        </div>
+
+        <div id="network-wrapper">
+            <div id="network"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // --- VIS.JS CONFIG ---
+    const nodes = new vis.DataSet([]);
+    const edges = new vis.DataSet([]);
+    const container = document.getElementById('network');
+
+    const data = { nodes: nodes, edges: edges };
+    const options = {
+        nodes: {
+            shape: 'icon',
+            icon: { face: "'Font Awesome 6 Free'", code: '\uf007', size: 40, color: '#c5c6c7' },
+            font: { color: '#fff', size: 14 }
+        },
+        edges: {
+            width: 2,
+            color: { color: '#444', highlight: '#66fcf1' },
+            arrows: { to: { enabled: true } },
+            smooth: { type: 'curvedCW', roundness: 0.2 }
+        },
+        physics: {
+            stabilization: false, // Turn off pre-stabilization to see them bounce
+            barnesHut: { gravitationalConstant: -3000, springLength: 250 }
+        }
+    };
+
+    // Initialize Network
+    console.log("Initializing Graph...");
+    const network = new vis.Network(container, data, options);
+
+    // --- SOCKET CONFIG ---
+    const socket = io();
+
+    socket.on('connect', () => {
+        console.log("Socket Connected!");
+        document.getElementById('connection-status').innerText = "SYSTEM ONLINE";
+    });
+
+    socket.on('fraud_alert', (msg) => {
+        console.log("Alert Received:", msg); // Check browser console F12
+
+        // 1. Update Logs
+        const logContainer = document.getElementById('log-container');
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerHTML = `<span class="log-time">${new Date().toLocaleTimeString()}</span>${msg.accounts.join(' ➔ ')}`;
+        logContainer.prepend(div);
+
+        // 2. Update Nodes
+        const accounts = msg.accounts;
+        accounts.forEach((acc, index) => {
+            if (!nodes.get(acc)) {
+                nodes.add({
+                    id: acc,
+                    label: acc,
+                    icon: { color: index === 0 ? '#ff0033' : '#ff9999' } // Red for source
+                });
+            }
+        });
+
+        // 3. Update Edges
+        for (let i = 0; i < accounts.length - 1; i++) {
+            const from = accounts[i];
+            const to = accounts[i+1];
+            const edgeId = `${from}-${to}`;
+            if (!edges.get(edgeId)) {
+                edges.add({ id: edgeId, from: from, to: to, label: '$9000' });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+com/fraud/logic/CycleDetector.class
+com/fraud/sink/AlertSink.class
+com/fraud/FraudDetectionJob.class
+com/fraud/model/Transaction.class
