@@ -1,0 +1,19 @@
+{
+  "transformation": {
+    "lowercase": "This function changes all the letters in a piece of text to small letters.",
+    "math_add": "This function takes a number and adds a certain amount to it.",
+    "replace_text": "This function changes certain words or phrases in a text to new ones.",
+    "round_number": "This function takes a number and makes it simpler by adjusting it to a certain number of decimal places.",
+    "substring": "This function takes a piece of text and gives you a specific part of it.",
+    "trim_whitespace": "This function removes any extra spaces at the beginning and end of a text.",
+    "uppercase": "This function changes all the letters in a piece of text to uppercase."
+  },
+  "validation": {
+    "is_valid_email": "This function checks if a given string looks like a valid email address.",
+    "min_length": "This function checks if a given string is long enough.",
+    "not_null": "The function checks if a given value is not empty or missing.",
+    "number_range": "This function checks if a given number falls within a specified range.",
+    "validate_name_length": "This function checks if a name is not too short or too long based on the limits you set."
+  },
+  "derivation": {}
+}
