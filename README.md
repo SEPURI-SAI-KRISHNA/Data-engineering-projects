@@ -39,4 +39,4 @@ python ingestion/producer.py
 \`\`\`
 
 **5. View Live Data**
-Access Superset at `http://localhost:8088` (admin/admin), connect to Trino via `trino://admin@trino:8080/iceberg`, and build your real-time dashboard.
+Access Superset at `http://localhost:8088` (admin/admin), connect to Trino via `trino://admin@trino:8080/iceberg`, and build your real-time dashboard. 
