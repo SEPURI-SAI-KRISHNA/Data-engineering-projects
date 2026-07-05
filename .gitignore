@@ -1,9 +1,29 @@
-# IntelliJ IDEA
+# IDEs
 .idea/
+.vscode/
+
+# Python
 __pycache__/
 *.pyc
 .env
 venv/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Java build output
+target/
+
+# Runtime data from docker volumes (minio, kafka, etc.)
+streaming-lakehouse-platform/docker/data/
 .data/
 logs/
-.vscode/
+
+# Big binary deps -- fetch these with the download script instead
+*.jar
+
+# minilog chaos harness and benchmark scratch data
+minilog/chaos/chaos-data/
+minilog/chaos/chaos-eo-data/
+minilog/bench-data/
