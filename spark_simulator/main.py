@@ -327,14 +327,14 @@ class Driver:
 # ==========================================
 # 2. STREAMLIT SETUP
 # ==========================================
-st.set_page_config(layout="wide", page_title="Ultimate Spark Simulator")
+st.set_page_config(layout="wide", page_title="Spark Simulator")
 
 if 'driver' not in st.session_state:
     st.session_state['driver'] = Driver()
     st.session_state['last_events'] = []
 
 driver = st.session_state['driver']
-st.title("⚡ Ultimate Spark Simulator")
+st.title("⚡ Spark Simulator")
 
 # ==========================================
 # 3. VISUALIZATION
