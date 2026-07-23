@@ -3,46 +3,52 @@ import time
 import random
 from kafka import KafkaProducer
 
-# Config
 TOPIC = "transactions"
-PRODUCER = KafkaProducer(
+
+producer = KafkaProducer(
     bootstrap_servers='localhost:9092',
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
 
-def get_txn(src, dst, amt):
+def txn(src, dst, amt):
     return {
         "transactionId": str(random.randint(10000, 99999)),
         "senderAccount": src,
         "receiverAccount": dst,
         "amount": amt,
-        "timestamp": int(time.time() * 1000)
+        "timestamp": int(time.time() * 1000),
     }
 
 
-print("Starting Transaction Generator... (Press Ctrl+C to stop)")
+def inject_ring():
+    """Pick 3-5 regular accounts and cycle money through them."""
+    size = random.randint(3, 5)
+    members = random.sample([f"User{i}" for i in range(1, 101)], size)
+    amount = random.randint(5000, 15000)
+    print(f"\n[!] Injecting ring: {' -> '.join(members)} -> {members[0]}")
+    for i, src in enumerate(members):
+        dst = members[(i + 1) % size]
+        producer.send(TOPIC, txn(src, dst, amount))
+
+
+print("Starting transaction generator... (Ctrl+C to stop)")
 
 try:
     while True:
-        # 1. Generate normal "Noise" (Legitimate traffic)
-        # Random people paying random people
+        # background noise: random users paying random users
         src = f"User{random.randint(1, 100)}"
         dst = f"User{random.randint(1, 100)}"
         if src != dst:
-            PRODUCER.send(TOPIC, get_txn(src, dst, random.randint(10, 100)))
-            print(f".", end="", flush=True)
+            producer.send(TOPIC, txn(src, dst, random.randint(10, 100)))
+            print(".", end="", flush=True)
 
-        # 2. Occasionally inject a FRAUD RING (approx every 3 seconds)
+        # roughly one ring every few seconds
         if random.random() < 0.1:
-            print("\n[!] Injecting Fraud Ring: EvilA -> EvilB -> EvilC -> EvilA")
+            inject_ring()
 
-            # Send the ring sequence
-            PRODUCER.send(TOPIC, get_txn("EvilA", "EvilB", 9000))
-            PRODUCER.send(TOPIC, get_txn("EvilB", "EvilC", 9000))
-            PRODUCER.send(TOPIC, get_txn("EvilC", "EvilA", 9000))
-
-        time.sleep(0.3)  # Throttle speed
+        time.sleep(0.3)
 
 except KeyboardInterrupt:
     print("\nStopping.")
+    producer.flush()
