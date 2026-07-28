@@ -32,7 +32,7 @@ public final class Consumer {
      * ahead is the only honest option left.
      */
     public static Consumer open(Log log, OffsetStore offsets, String group) throws IOException {
-        long start = Math.max(offsets.committed(group).orElse(0), log.firstOffset());
+        long start = Math.max(offsets.committed(group).orElse(0L), log.firstOffset());
         return new Consumer(log, offsets, group, start);
     }
 

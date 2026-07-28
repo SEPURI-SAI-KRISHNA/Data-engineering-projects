@@ -1,0 +1,33 @@
+dataset: rider_locations
+owner: mapping-team
+description: Real-time GPS pings from rider devices, emitted every 5 seconds.
+state: active
+
+schema:
+  version: 1
+  fields:
+    - name: rider_id
+      type: string
+      required: true
+      doc: UUID of the rider.
+    - name: lat
+      type: double
+      required: true
+      doc: Latitude in decimal degrees (WGS84).
+    - name: lon
+      type: double
+      required: true
+      doc: Longitude in decimal degrees (WGS84).
+    - name: accuracy_m
+      type: float
+      required: false
+      doc: GPS horizontal accuracy in metres, if reported by the device.
+    - name: ts
+      type: timestamp
+      required: true
+      doc: Device-side event timestamp (millisecond precision, UTC).
+
+stream:
+  topic: rider.locations
+  partitions: 6
+  retention_hours: 24

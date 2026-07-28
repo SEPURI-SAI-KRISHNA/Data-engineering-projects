@@ -1,0 +1,38 @@
+dataset: orders
+owner: data-platform
+description: Customer order events emitted by the checkout service.
+state: active
+
+# v2 changes (relative to v1):
+#   - currency: promoted from optional to required (BREAKING — history may lack this field)
+#   - coupon: removed (BREAKING — downstream queries break)
+#   - amount: precision widened decimal(10,2) -> decimal(12,2) (safe widening)
+schema:
+  version: 2
+  fields:
+    - name: order_id
+      type: string
+      required: true
+      doc: UUID of the order.
+    - name: customer_id
+      type: string
+      required: true
+      doc: UUID of the customer who placed the order.
+    - name: amount
+      type: decimal(12,2)
+      required: true
+      doc: Order total, in the currency below. Precision widened to support larger values.
+    - name: currency
+      type: string
+      required: true
+      doc: ISO 4217 currency code (e.g. USD). Required from v2 onward.
+
+stream:
+  topic: orders.events
+  partitions: 3
+  retention_hours: 168
+
+table:
+  name: iceberg.orders
+  partition_by:
+    - day(created_at)
