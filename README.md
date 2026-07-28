@@ -38,7 +38,19 @@ Most data engineering tutorials stop at "it works on my laptop". These projects 
 
 ## 📦 Projects
 
-### 1. Streaming Lakehouse Platform — [`streaming-lakehouse-platform/`](streaming-lakehouse-platform/)
+| # | Project | Key Technologies | Description |
+|---|---|---|---|
+| 1 | [Streaming Lakehouse Platform](#1-streaming-lakehouse-platform) | Kafka · Flink · Iceberg · Trino · Superset | End-to-end locally deployed lakehouse |
+| 2 | [Fraud Ring Detection](#2-fraud-ring-detection) | Kafka · Flink · Redis · Flask | Real-time cycle detection in payment graphs |
+| 3 | [datactl](#3-datactl) | Python · YAML · Kafka · Iceberg | Schema contract tool — datasets as code |
+| 4 | [minilog](#4-minilog) | Java · Maven | Durable log from scratch, crash-verified |
+| 5 | [Data Refinement Engine](#5-data-refinement-engine) | Python · Streamlit · OpenAI API | Interactive data cleaning and enrichment UI |
+| 6 | [Airflow DAG Builder](#6-airflow-dag-builder) | React · React Flow · Node.js | Visual drag-and-drop Airflow DAG composer |
+| 7 | [Spark Simulator](#7-spark-simulator) | Python · Streamlit | Interactive Spark execution concept explorer |
+
+---
+
+### 1. Streaming Lakehouse Platform — [`streaming-lakehouse-platform/`](streaming-lakehouse-platform/README.md)
 
 An end-to-end, locally deployed distributed data platform demonstrating high-throughput event streaming, stateful stream processing, and open-table federated querying.
 
@@ -56,7 +68,7 @@ An end-to-end, locally deployed distributed data platform demonstrating high-thr
 
 ---
 
-### 2. Fraud Ring Detection — [`fraud-detection/`](fraud-detection/)
+### 2. Fraud Ring Detection — [`fraud-detection/`](fraud-detection/README.md)
 
 Detects money-laundering rings (A → B → C → A) in a live transaction stream. Transactions flow through Kafka into a Flink job that builds a payment graph per time window and runs a DFS cycle detector. Alerts land in Redis; a Flask + vis.js dashboard renders rings as a live graph.
 
@@ -68,7 +80,7 @@ datagen.py → Kafka → Flink (CycleDetector) → Redis pub/sub → Flask + vis
 
 ---
 
-### 3. datactl — [`datactl/`](datactl/)
+### 3. datactl — [`datactl/`](datactl/README.md)
 
 *Datasets as code.* Each dataset — its schema, its Kafka topic, its Iceberg table — is declared once in a YAML spec that lives in git. `datactl` makes the infrastructure match the spec and refuses schema changes that would break consumers. Unlike general IaC it understands the one thing it manages: it can tell you *this change is a safe widening* or *this change strands every query naming that column*, at plan time, in the PR.
 
@@ -86,7 +98,7 @@ Exit codes are the CI contract: **0** clean, **1** invalid specs, **2** breaking
 
 ---
 
-### 4. minilog — [`minilog/`](minilog/)
+### 4. minilog — [`minilog/`](minilog/README.md)
 
 A single-node durable log built from scratch in Java with an honest ack contract: **if `append()` returned, the record survives `kill -9`.** Built to understand what systems like Kafka actually promise and what it costs to keep the promise.
 
@@ -99,23 +111,25 @@ Key demonstrations:
 
 ---
 
-### 5. Data Refinement Engine — [`Data_refinement_engine/`](Data_refinement_engine/)
+### 5. Data Refinement Engine — [`Data_refinement_engine/`](Data_refinement_engine/README.md)
 
-A configurable Streamlit app that turns raw records into refined records by applying user-defined **transformations, validations, and derivations** — a reusable refinement layer for cleaning and enriching data before it enters a pipeline.
+A configurable Streamlit app that turns raw records into refined records by applying user-defined **transformations, validations, and derivations** — a reusable refinement layer for cleaning and enriching data before it enters a pipeline. Includes an AI assistant that can generate new processing functions from a plain-English description.
 
 **Quick start:** `pip install -r requirements.txt && streamlit run Engine/engine.py`
 
 ---
 
-### 6. Airflow Drag-and-Drop Builder — [`airflow_drag_drop/`](airflow_drag_drop/)
+### 6. Airflow DAG Builder — [`airflow_drag_drop/`](airflow_drag_drop/README.md)
 
-A **visual, drag-and-drop builder** for Apache Airflow DAGs — compose pipelines in a browser without hand-writing DAG code, then export the generated DAG definition.
+A **visual, drag-and-drop builder** for Apache Airflow DAGs — compose pipelines in a browser without hand-writing DAG code, then export the generated DAG definition as YAML. Built with React and React Flow.
+
+**Quick start:** `cd airflow_drag_drop/airflow-builder && npm install && npm start`
 
 ---
 
-### 7. Spark Simulator — [`spark_simulator/`](spark_simulator/)
+### 7. Spark Simulator — [`spark_simulator/`](spark_simulator/README.md)
 
-A lightweight Streamlit app for experimenting with and understanding Spark execution concepts interactively. See [`spark_simulator/How-to-run.md`](spark_simulator/How-to-run.md) for setup.
+An interactive Streamlit app that models a mini Spark cluster — Driver and Executors — so you can explore partitioning, shuffle, fault tolerance, OOM behaviour, and straggler effects hands-on.
 
 **Quick start:** `pip install streamlit && streamlit run spark_simulator/main.py`
 
