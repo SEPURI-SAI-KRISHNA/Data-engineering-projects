@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # ── datactl: pure-Python spec/schema/compat logic ──────────────────────────
+  datactl-tests:
+    name: datactl — pytest
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: datactl
+        run: pip install pytest pyyaml
+
+      - name: Run tests
+        working-directory: datactl
+        run: python -m pytest -v
+
+  # ── minilog: Java durable-log core ─────────────────────────────────────────
+  minilog-tests:
+    name: minilog — Maven
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run tests
+        working-directory: minilog
+        run: mvn test -B

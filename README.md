@@ -11,6 +11,7 @@
 ![Apache Iceberg](https://img.shields.io/badge/Iceberg-1C1C1C?style=flat-square)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+[![CI](https://github.com/SEPURI-SAI-KRISHNA/Data-engineering-projects/actions/workflows/ci.yml/badge.svg)](https://github.com/SEPURI-SAI-KRISHNA/Data-engineering-projects/actions/workflows/ci.yml)
 
 A collection of **self-contained, end-to-end data engineering projects** that span the full spectrum of the discipline: real-time stream processing, lakehouse storage, fraud detection, schema governance, and distributed systems fundamentals — each built to run and each explaining the reasoning behind the design choices.
 
@@ -26,6 +27,7 @@ A collection of **self-contained, end-to-end data engineering projects** that sp
 - [Who This Is For](#-who-this-is-for)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
+- [Changelog](#-changelog)
 - [License](#-license)
 
 ---
@@ -228,7 +230,13 @@ python3 chaos/chaos_run.py 100
 
 ## 🤝 Contributing
 
-Contributions, corrections, and new project ideas are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+Contributions, corrections, and new project ideas are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## 📋 Changelog
+
+A full milestone log is in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
