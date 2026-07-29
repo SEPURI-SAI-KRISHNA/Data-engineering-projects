@@ -1,0 +1,21 @@
+dataset: rider_locations
+owner: sepurisaikrishna55@gmail.com
+description: >
+  Latest known courier position, keyed by rider id. Stream only -- too
+  churny to be worth landing in the lake.
+state: active
+
+stream:
+  topic: rider-locations.v1
+  partitions: 12
+  retention_hours: 24
+  config:
+    cleanup.policy: compact
+
+schema:
+  version: 1
+  fields:
+    - {name: rider_id, type: string, required: true}
+    - {name: lat, type: double, required: true}
+    - {name: lon, type: double, required: true}
+    - {name: recorded_ts, type: timestamp, required: true}

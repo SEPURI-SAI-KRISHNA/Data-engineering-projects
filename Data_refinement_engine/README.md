@@ -6,6 +6,22 @@ The function library is extensible at runtime: describe what you need in
 plain language and the app searches the existing registry first, and only
 generates (and shows you for approval) new Python code when nothing matches.
 
+## Directory layout
+
+```
+Data_refinement_engine/
+├── Engine/
+│   ├── engine.py            # Streamlit entry point — UI and session state
+│   ├── processor.py         # applies a mapping config to a record
+│   ├── transformations.py   # built-in transformation functions
+│   ├── validations.py       # built-in validation functions
+│   ├── derivations.py       # built-in derivation functions
+│   ├── ai_engine.py         # LLM search/generation over the registries
+│   └── function_metadata.json
+├── tests/
+└── requirements.txt
+```
+
 ## Running
 
 ```bash
@@ -27,16 +43,13 @@ the refined output plus the schema JSON.
 Validation failures and steps that raise are collected per record and shown
 in the results panel instead of being silently swallowed.
 
-## Layout
-
-- `Engine/processor.py` — pure record processing, no UI or LLM dependencies
-- `Engine/transformations.py`, `validations.py`, `derivations.py` — the function registries
-- `Engine/ai_engine.py` — LLM search/generation over the registries
-- `Engine/engine.py` — the Streamlit app
-
 ## Tests
 
 ```bash
 pip install pytest
 pytest tests/
 ```
+
+---
+
+> Part of [Data Engineering Projects](../README.md) · [Contributing](../CONTRIBUTING.md) · [MIT License](../LICENSE)

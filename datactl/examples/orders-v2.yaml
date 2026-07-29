@@ -1,0 +1,25 @@
+# A proposed next version of specs/orders.yaml, used to demo check-compat:
+# one safe widening, one breaking add, one breaking drop.
+dataset: orders
+owner: sepurisaikrishna55@gmail.com
+description: Order events from checkout, one record per order state change.
+state: active
+
+stream:
+  topic: orders.v1
+  partitions: 6
+  retention_hours: 168
+
+table:
+  name: lake.orders
+  partition_by: [day(order_ts)]
+
+schema:
+  version: 2
+  fields:
+    - {name: order_id, type: string, required: true, doc: uuid}
+    - {name: user_id, type: string, required: true}
+    - {name: status, type: string, required: true, doc: created|paid|shipped|cancelled}
+    - {name: amount, type: "decimal(12,2)", required: true}
+    - {name: currency, type: string, required: true, doc: ISO 4217}
+    - {name: order_ts, type: timestamp, required: true}

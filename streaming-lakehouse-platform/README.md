@@ -1,11 +1,11 @@
-# Ultra-Low Latency Streaming & Lakehouse Platform
+# Streaming Lakehouse Platform
 
-An end-to-end, locally deployed distributed data platform demonstrating high-throughput event streaming, stateful stream processing, and open-table federated querying. 
+An end-to-end, locally deployed data platform: event streaming through Kafka, stateful stream processing in Flink, Iceberg tables on MinIO, and federated SQL through Trino.
 
 ## 🏗️ Architecture
-This project implements a modern streaming lakehouse architecture using Docker Compose to orchestrate the following ecosystem:
+Docker Compose orchestrates the stack:
 
-* **Ingestion:** Custom Python generator simulating high-frequency IoT telemetry, utilizing `msgspec` for ultra-fast C-based JSON serialization.
+* **Ingestion:** Python generator simulating IoT telemetry, using `msgspec` for fast JSON serialization.
 * **Message Broker:** Apache Kafka (3 partitions) routing ordered events via Murmur2 key hashing.
 * **Stream Processing:** Apache Flink executing stateful tumbling window aggregations with exactly-once semantics and checkpointing.
 * **Storage Layer:** MinIO (S3-compatible) storing Apache Iceberg parquet files.
@@ -13,30 +13,35 @@ This project implements a modern streaming lakehouse architecture using Docker C
 * **Query Engine:** Trino providing federated SQL access over the data lake.
 * **Visualization:** Apache Superset serving real-time, auto-refreshing dashboards.
 
-## ⚙️ Low-Level Design (LLD) Highlights
-* **Serialization Optimization:** Replaced standard Python `json` with `msgspec.Struct`, bypassing traditional serialization bottlenecks to maximize producer throughput.
-* **Partition Strategies:** Enforced sensor-level ordering by keying Kafka messages on `sensor_id`, ensuring accurate state calculation downstream.
-* **Stateful Windows:** Utilized Flink SQL `TUMBLE` windows with event-time watermarking to handle late-arriving data and calculate rolling 10-second temperature averages.
-* **Decoupled Compute/Storage:** Completely separated the Flink/Trino compute engines from the MinIO storage layer, mimicking production Kubernetes environments.
+## ⚙️ Design Notes
+* **Serialization:** `msgspec.Struct` instead of the stdlib `json` module for cheaper encoding on the producer side.
+* **Partitioning:** Kafka messages are keyed on `sensor_id`, so each sensor's events stay ordered within a partition and downstream state stays correct.
+* **Stateful Windows:** Flink SQL `TUMBLE` windows with event-time watermarking handle late-arriving data and compute rolling 10-second temperature averages.
+* **Decoupled Compute/Storage:** Flink/Trino compute is fully separated from the MinIO storage layer, mirroring production setups.
 
 ## 🚀 Quick Start
+**0. Fetch the Flink connector jars** (too big for git)
+```bash
+./processing/flink/lib/download-jars.sh
+```
+
 **1. Boot the Infrastructure**
-\`\`\`bash
+```bash
 docker compose up -d
-\`\`\`
+```
 
 **2. Initialize the Lakehouse Schema (Trino)**
-\`\`\`bash
+```bash
 docker exec -it trino trino --execute "CREATE SCHEMA IF NOT EXISTS iceberg.telemetry WITH (location = 's3a://warehouse/');"
-\`\`\`
+```
 
 **3. Start the Flink Processing Job**
 Submit the SQL job located in the documentation to the Flink JobManager to begin checkpointing and sinking to Iceberg.
 
 **4. Run the Ingestion Engine**
-\`\`\`bash
+```bash
 python ingestion/producer.py
-\`\`\`
+```
 
 **5. View Live Data**
-Access Superset at `http://localhost:8088` (admin/admin), connect to Trino via `trino://admin@trino:8080/iceberg`, and build your real-time dashboard. 
+Access Superset at `http://localhost:8088` (admin/admin), connect to Trino via `trino://admin@trino:8080/iceberg`, and build your real-time dashboard.
