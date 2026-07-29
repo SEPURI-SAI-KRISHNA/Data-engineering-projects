@@ -26,6 +26,10 @@ schema:
       type: string
       required: true
       doc: ISO 4217 currency code (e.g. USD). Required from v2 onward.
+    - name: created_at
+      type: timestamp
+      required: true
+      doc: When the order was placed (UTC).
 
 stream:
   topic: orders.events
