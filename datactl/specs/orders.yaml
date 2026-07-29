@@ -1,0 +1,38 @@
+dataset: orders
+owner: data-platform
+description: Customer order events emitted by the checkout service.
+state: active
+
+schema:
+  version: 1
+  fields:
+    - name: order_id
+      type: string
+      required: true
+      doc: UUID of the order.
+    - name: customer_id
+      type: string
+      required: true
+      doc: UUID of the customer who placed the order.
+    - name: amount
+      type: decimal(10,2)
+      required: true
+      doc: Order total. Precision widened to decimal(12,2) in v2.
+    - name: coupon
+      type: string
+      required: false
+      doc: Coupon code applied at checkout, if any. Removed in v2.
+    - name: created_at
+      type: timestamp
+      required: true
+      doc: When the order was placed (UTC).
+
+stream:
+  topic: orders.events
+  partitions: 3
+  retention_hours: 168
+
+table:
+  name: iceberg.orders
+  partition_by:
+    - day(created_at)

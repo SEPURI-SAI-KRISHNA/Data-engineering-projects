@@ -50,8 +50,8 @@ python3 -m venv venv && venv/bin/pip install pytest pyyaml
 venv/bin/python -m pytest
 ```
 
-51 tests, all pure logic — spec text in, verdicts out. No infrastructure
-needed until phase 2.
+A small pytest suite exercises the documented CLI contracts — spec text in,
+verdicts out. No infrastructure needed until phase 2.
 
 ## Layout
 
