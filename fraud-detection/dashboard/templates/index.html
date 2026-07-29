@@ -153,7 +153,7 @@
         const logContainer = document.getElementById('log-container');
         const div = document.createElement('div');
         div.className = 'log-entry';
-        div.innerHTML = `<span class="log-time">${new Date().toLocaleTimeString()}</span>${msg.accounts.join(' ➔ ')}`;
+        div.innerHTML = `<span class="log-time">${new Date().toLocaleTimeString()}</span>${msg.accounts.join(' ➔ ')} ➔ ${msg.accounts[0]}`;
         logContainer.prepend(div);
 
         // 2. Update Nodes
@@ -168,13 +168,13 @@
             }
         });
 
-        // 3. Update Edges
-        for (let i = 0; i < accounts.length - 1; i++) {
+        // 3. Update Edges (wrap around so the ring closes)
+        for (let i = 0; i < accounts.length; i++) {
             const from = accounts[i];
-            const to = accounts[i+1];
+            const to = accounts[(i + 1) % accounts.length];
             const edgeId = `${from}-${to}`;
             if (!edges.get(edgeId)) {
-                edges.add({ id: edgeId, from: from, to: to, label: '$9000' });
+                edges.add({ id: edgeId, from: from, to: to });
             }
         }
     });

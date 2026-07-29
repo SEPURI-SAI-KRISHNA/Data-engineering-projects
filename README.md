@@ -1,6 +1,6 @@
 # 🛠️ Data Engineering Projects
 
-> Production-grade data engineering — from a real-time streaming lakehouse to a fraud-ring detector and an AI-assisted record-refinement engine.
+> End-to-end data engineering projects — from a real-time streaming lakehouse to a fraud-ring detector and an AI-assisted record-refinement engine.
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=flat-square&logo=apachespark&logoColor=white)
@@ -27,6 +27,15 @@ A **visual, drag-and-drop builder** for Apache Airflow DAGs — compose pipeline
 
 ### 5. Spark Simulator — [`spark_simulator/`](spark_simulator/)
 A lightweight **simulator** to experiment with and understand Spark execution. See its `How-to-run.md`.
+
+### 6. Elasticsearch Builder — [`elasticsearch_builder/`](elasticsearch_builder/)
+Tooling for **Elasticsearch query engineering**: a static query assessor (heap/fan-out/anti-pattern checks), a natural-language-to-DSL generator, and an optimizer.
+
+### 7. minilog — [`minilog/`](minilog/)
+A **durable log built from scratch** with a provable ack contract: acked records survive `kill -9`. Ships with a design doc, deterministic corruption-recovery tests, and a chaos harness that crash-tests the writer thousands of times.
+
+### 8. datactl — [`datactl/`](datactl/)
+**Datasets as code**: declare a dataset's schema, Kafka topic, and Iceberg table once in a YAML spec; the tool reconciles infrastructure to match and **gates schema changes** that would break downstream consumers — with CI-friendly exit codes.
 
 ## 🚀 Getting started
 
