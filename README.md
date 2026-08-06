@@ -95,7 +95,7 @@ Data-engineering-projects/
 | Requirement | Used by |
 |---|---|
 | Docker & Docker Compose | `streaming-lakehouse-platform`, `fraud-detection` |
-| Python 3.10+ | all Python projects |
+| Python 3.11+ | all Python projects |
 | Java 17+ & Maven | `minilog`, `fraud-detection` (Flink job) |
 | Node.js 18+ | `airflow_drag_drop` |
 
